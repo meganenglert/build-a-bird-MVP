@@ -31,8 +31,8 @@ export default class titleScene extends Phaser.Scene {
         this.load.image('titleStart','assets/startButton.png')
         this.load.image('easyButton','assets/easy.png')
         this.load.image('hardButton','assets/hard.png')
-        this.load.image('mute','assets/mute.png')
-        this.load.image('unmute','assets/unmute.png')
+        this.load.image('mute','assets/unmute.png')
+        this.load.image('unmute','assets/mute.png')
         this.load.image('bigNene','assets/neneTitle.png')
         this.load.audio('summerFun','assets/summerFun.mp3')
         
