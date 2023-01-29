@@ -12,14 +12,9 @@ export default class GameScene extends Phaser.Scene {
   private collectionButton!: Phaser.GameObjects.Image;
   private saveButton!: Phaser.GameObjects.Image;
 
-  //Rachel
   public coins: number;
-  //private popup?: Phaser.GameObjects.Image;
-  //private contain: Phaser.GameObjects.Container | undefined;
-  //private quiztext?: Phaser.GameObjects.Text;
 
   public coinTracker: Array<string>;
-  //Rachel End
 
   // Holds coin management system
   // Populates left side of screen with different purchasables
