@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import eventsCenter from "../EventsCenter";
 import GameScene from "../GameScene"
+import Questions from './Questions'
 //import Shop from "./Shop";
 
 export default class DragAndDrop extends Phaser.GameObjects.Container {
@@ -9,12 +10,13 @@ export default class DragAndDrop extends Phaser.GameObjects.Container {
     private dragColors: Record<string, Phaser.GameObjects.GameObject>;
     private dragHats: Record<string, Phaser.GameObjects.GameObject>;
     private nene: Phaser.GameObjects.GameObject;
-    private text: Phaser.GameObjects.Text;
+    public text: Phaser.GameObjects.Text;
     private currentAttributes: Record<string,string>;
     private hat?: Phaser.GameObjects.GameObject;
     private resetButton: Phaser.GameObjects.GameObject;
     private totalnene: number
     private totalnenetext: Phaser.GameObjects.Text;
+    private questions: Questions
   
   //COLORS V2 END ----------------------------------------------
 
@@ -30,6 +32,7 @@ export default class DragAndDrop extends Phaser.GameObjects.Container {
     this.currentAttributes = {};
     this.dragColors = {};
     this.dragHats = {};
+    this.questions = new Questions(scene);
     
     this.displayValueOptions((this.scene as GameScene).colors, this.dragColors);
     this.displayValueOptions2((this.scene as GameScene).hats, this.dragHats);
@@ -160,9 +163,18 @@ private handleColorCollision(
             
           }
       
-      private updateText() {
+      public updateText(name?: string) {
         const newText = this.generateDisplayString();
-        this.text = this.text.setText("nene = new Nene(\n\t" + newText + "\n);");
+        if (!name) {
+          name = "nene";
+        }
+        if (newText ==="") {
+          this.text = this.text.setText(name + " = new Nene();");
+        }
+        else {
+          this.text = this.text.setText(name + " = new Nene(\n\t" + newText + "\n);");
+        }
+        
 
         // Checks if nene is new for coins 
         if(!Object.keys((this.scene as GameScene).coinTracker).includes(newText)){
@@ -172,6 +184,9 @@ private handleColorCollision(
           eventsCenter.emit("update-nenes", (this.scene as GameScene).coinTracker);
           this.totalnene = this.totalnene +1;
           this.totalnenetext = this.totalnenetext.setText(`Total Nenes Found: ${this.totalnene}`)
+          if (this.totalnene % 5 == 0){
+            this.questions.generatePopUp();
+          }
           if (this.totalnene == 25) {
             this.scene.scene.stop().launch("End");
           }
@@ -189,8 +204,10 @@ private handleColorCollision(
         Object.keys(this.currentAttributes).sort().forEach(
             (key) => lines.push( "\"" + this.currentAttributes[key] + "\",")
         );
-        if (lines)
-          return lines.join("\n\t");
+        if (lines){
+          const str = lines.join("\n\t");
+          return str.substring(0, str.length-1)
+        }
         return "";
       }
 

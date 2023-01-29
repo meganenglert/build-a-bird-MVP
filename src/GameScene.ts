@@ -15,9 +15,6 @@ export default class GameScene extends Phaser.Scene {
   //Rachel
   public coins: number;
   public totalnene: number;
-  //private popup?: Phaser.GameObjects.Image;
-  //private contain: Phaser.GameObjects.Container | undefined;
-  //private quiztext?: Phaser.GameObjects.Text;
 
   public coinTracker: Record<string,string>;
   //Rachel End
@@ -32,7 +29,7 @@ export default class GameScene extends Phaser.Scene {
 
   // Question pop ups
   // Also processes question data and displays
-  //private questions?: Questions;
+  private questions?: Questions;
 
   // Where the different objects are displayed / stacked
   //private displayArea?: DisplayArea;
@@ -80,6 +77,8 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("saveButton", "assets/saveButton.png");
     this.scene.run("collectionScene");
     this.scene.setVisible(false, "collectionScene");
+    this.load.image("custom-name", "assets/customname.png");
+    this.load.image("custom-save", "assets/customname-save.png");
   }
 
   create(difficulty: Array<string>) {
@@ -119,15 +118,12 @@ export default class GameScene extends Phaser.Scene {
     });
     this.collectionButton.on("pointerdown", () => this.goToCollectionScene());
 
-    //Prompts the User to name their nene
-    this.add.text(600, 540, "Type below to name your nene:", {
-      font: "16px Courier",
-      color: "#000000",
-    });
+    this.add.image(750, 550, "custom-name").setScale(1.25);
+    this.saveButton = this.add.image(775,550,"custom-save").setScale(1).setInteractive();
     //Takes the user's text input
-    this.userText = this.add.text(630, 560, "Type Here", {
-      font: "16px Courier",
-      color: "#000000",
+    this.userText = this.add.text(640, 540, "Set custom name", {
+      font: "18px Courier",
+      color: "#FFFFFF",
     });
     this.userText.setInteractive().on("pointerdown", () => {
       this.rexUI.edit(this.userText);
@@ -136,7 +132,7 @@ export default class GameScene extends Phaser.Scene {
 
     //Displays the save button
     //When the save button is clicked, it saves the name of the nene
-    this.saveButton = this.add.image(750, 60, "saveButton").setInteractive();
+    //this.saveButton = this.add.image(750, 60, "saveButton").setInteractive();
     this.saveButton.on("pointerover", () => {
       this.saveButton.setAlpha(1);
     });
@@ -148,7 +144,7 @@ export default class GameScene extends Phaser.Scene {
   saveMyObject(elem: string) {
     this.coinTracker[this.dragAndDrop?.generateDisplayString() || ""] = (elem as string);
     //this.add.text(100, 100, "new name " + elem);
-    eventsCenter.emit("update-nenes", this.coinTracker);
+    this.dragAndDrop?.updateText(elem as string);
   }
 
   private loadAttribute(attributeName: string, attributeValues: Array<string>) {
@@ -168,7 +164,7 @@ export default class GameScene extends Phaser.Scene {
     this.scene.sleep();
   }
   private goToEndScene() {
-    this.scene.stop("GameScene").launch("End");
+    this.scene.stop("GameScene").stop("CollectionScene").launch("End");
   }
 
   update() {
