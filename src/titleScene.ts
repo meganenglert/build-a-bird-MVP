@@ -110,7 +110,7 @@ export default class titleScene extends Phaser.Scene {
          this.unmute.on("pointerup",()=>{
              this.unmute?.setVisible(false)
              this.mute?.setVisible(true)
-             this.music.play()
+             this.music.resume()
          })
         
     
