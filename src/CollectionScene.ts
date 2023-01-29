@@ -6,7 +6,7 @@ import { ScrollablePanel } from 'phaser3-rex-plugins/templates/ui/ui-components.
 export default class collectionScene extends Phaser.Scene {
     private backButton!: Phaser.GameObjects.Image;
     collectionBG!: Phaser.GameObjects.Image;
-    private nenesCollected: Record<string,string>;
+    public nenesCollected: Record<string,string>;
     private colors: Array<string>;
     private hats: Array<string>;
     private neneImages: Phaser.GameObjects.Group;
@@ -220,8 +220,8 @@ var sizer = panel.getElement('panel');
 
     //Function that handles changing the scene to the Game Scene
     private goToGameScene(){
-        //this.scene.start('GameScene');
-        this.scene.wake("GameScene");
+        this.scene.wake("GameScene")
+        
     }
 
     private loadInNenes() {

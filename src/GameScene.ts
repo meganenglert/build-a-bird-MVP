@@ -1,10 +1,11 @@
 import Phaser from "phaser";
 import Shop from "./components/Shop";
 import Tutorial from "./components/Tutorial";
-//import Questions from "./components/Questions";
+import Questions from "./components/Questions";
 import DisplayArea from "./components/DisplayArea";
 import DragAndDrop from "./components/DragAndDrop";
 import eventsCenter from "./EventsCenter";
+
 
 export default class GameScene extends Phaser.Scene {
   private background?: Phaser.GameObjects.Image;
@@ -15,9 +16,6 @@ export default class GameScene extends Phaser.Scene {
   //Rachel
   public coins: number;
   public totalnene: number;
-  //private popup?: Phaser.GameObjects.Image;
-  //private contain: Phaser.GameObjects.Container | undefined;
-  //private quiztext?: Phaser.GameObjects.Text;
 
   public coinTracker: Record<string,string>;
   //Rachel End
@@ -40,7 +38,7 @@ export default class GameScene extends Phaser.Scene {
   // Drag and drop components
   // The "machine" or whatever we're calling it
   // Where the attribute values go
-  private dragAndDrop?: DragAndDrop;
+  public dragAndDrop?: DragAndDrop;
 
   colors: Array<string>;
   hats: Array<string>;
@@ -52,7 +50,7 @@ export default class GameScene extends Phaser.Scene {
   constructor() {
     super("GameScene");
     this.colors = ["blue", "green", "purple", "red"];
-    this.coins = 10;
+    this.coins = 0;
     this.coinTracker = {"":"vanilla nene"};
     this.totalnene = 1;
     this.hats = ["beanie", "bucket-hat", "sunhat", "visor"];
@@ -63,7 +61,7 @@ export default class GameScene extends Phaser.Scene {
     //this.load.setBaseURL('https://labs.phaser.io')
     this.load.image("bg", "assets/background.png");
     this.load.image("color", "assets/Colorwheel.png");
-    this.load.image("hats", "assets/hats.jpeg");
+    this.load.image("hats", "assets/hats.png");
 
     this.load.image("popup", "assets/popup.png");
 
@@ -80,9 +78,11 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("saveButton", "assets/saveButton.png");
     this.scene.run("collectionScene");
     this.scene.setVisible(false, "collectionScene");
+    this.load.image("custom-name", "assets/customname.png");
+    this.load.image("custom-save", "assets/customname-save.png");
   }
 
-  create() {
+  create(difficulty: Array<string>) {
     this.background = this.add.image(450, 300, "bg");
     this.background.displayHeight = 600;
     this.background.displayWidth = 900;
@@ -93,10 +93,11 @@ export default class GameScene extends Phaser.Scene {
     new DisplayArea(this);
 
     // CREATES THE SHOP OBJECT & initializes values & SHOWS
-    this.dragAndDrop = new DragAndDrop(this);
+    this.dragAndDrop = new DragAndDrop(this, difficulty);
 
     // CREATES THE SHOP OBJECT & initializes values & SHOWS
     //new Questions(this);
+    new Questions(this)
 
     // CREATES THE SHOP OBJECT & initializes values & SHOWS
     new Tutorial(this);
@@ -116,15 +117,12 @@ export default class GameScene extends Phaser.Scene {
     });
     this.collectionButton.on("pointerdown", () => this.goToCollectionScene());
 
-    //Prompts the User to name their nene
-    this.add.text(600, 540, "Type below to name your nene:", {
-      font: "16px Courier",
-      color: "#000000",
-    });
+    this.add.image(750, 550, "custom-name").setScale(1.25);
+    this.saveButton = this.add.image(775,550,"custom-save").setScale(1).setInteractive();
     //Takes the user's text input
-    this.userText = this.add.text(630, 560, "Type Here", {
-      font: "16px Courier",
-      color: "#000000",
+    this.userText = this.add.text(640, 540, "Set custom name", {
+      font: "18px Courier",
+      color: "#FFFFFF",
     });
     this.userText.setInteractive().on("pointerdown", () => {
       this.rexUI.edit(this.userText);
@@ -133,7 +131,7 @@ export default class GameScene extends Phaser.Scene {
 
     //Displays the save button
     //When the save button is clicked, it saves the name of the nene
-    this.saveButton = this.add.image(750, 60, "saveButton").setInteractive();
+    //this.saveButton = this.add.image(750, 60, "saveButton").setInteractive();
     this.saveButton.on("pointerover", () => {
       this.saveButton.setAlpha(1);
     });
@@ -144,8 +142,9 @@ export default class GameScene extends Phaser.Scene {
   }
   saveMyObject(elem: string) {
     this.coinTracker[this.dragAndDrop?.generateDisplayString() || ""] = (elem as string);
-    //this.add.text(100, 100, "new name " + elem);
     eventsCenter.emit("update-nenes", this.coinTracker);
+    //this.add.text(100, 100, "new name " + elem);
+    this.dragAndDrop?.updateText(elem as string);
   }
 
   private loadAttribute(attributeName: string, attributeValues: Array<string>) {
@@ -162,16 +161,20 @@ export default class GameScene extends Phaser.Scene {
 
   //Function that handles changing the scene to the Collection Scene
   private goToCollectionScene() {
-    this.scene.sleep();
+    this.scene.sleep()
+    
   }
   private goToEndScene() {
-    this.scene.stop("GameScene").launch("End");
+    this.scene.stop("GameScene").stop("collectionScene").launch("End")
+
   }
 
   update() {
     if (this.totalnene == 25) {
       this.totalnene = 1;
-      this.coins = 10;
+      this.coins = 0;
+      this.coinTracker = {"":"vanilla nene"};
+      eventsCenter.emit("update-nenes",this.coinTracker)
       this.goToEndScene();
     }
   }
