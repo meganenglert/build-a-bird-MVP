@@ -4,14 +4,14 @@ import GameScene from "../GameScene"
 
 export default class Questions extends Phaser.GameObjects.Container {
   //Rachel
-  private popupBG?: Phaser.GameObjects.Image;
+  private popupBG: Phaser.GameObjects.Image;
   private container: Phaser.GameObjects.Container | undefined;
-  private quiztext: Phaser.GameObjects.Text | undefined;
-  private choices1?: Phaser.GameObjects.Text;
+  private quiztext: Phaser.GameObjects.Text;
+  private choices1: Phaser.GameObjects.Text;
   private choices2?: Phaser.GameObjects.Text;
-  private choices3?: Phaser.GameObjects.Text;
-  private choices4?: Phaser.GameObjects.Text;
-  private index?: number;
+  private choices3: Phaser.GameObjects.Text;
+  private choices4: Phaser.GameObjects.Text;
+  private index: number;
 
   //Rachel End
 
@@ -19,29 +19,31 @@ export default class Questions extends Phaser.GameObjects.Container {
       super(scene) //Don't touch
       this.scene.load.json('questions', 'src/components/quiz.json');
       this.scene.load.start();
-      this.generatePopUp();
+      this.index = Math.floor(Math.random() * 20);
+      this.popupBG = this.scene.physics.add.image(150,100, 'popup').setOrigin(0).setVisible(false)
+      this.generatePopUp(this.index);
       this.scene.add.existing(this); //Don't touch
   }
 
-  private generatePopUp(){
+  private generatePopUp(index: number){
       let quizJson = this.scene.cache.json.get('questions');
-      this.index = Math.floor(Math.random() * 20);
-      this.popupBG = this.scene.physics.add.image(150,100, 'popup').setOrigin(0);
-      this.quiztext = this.scene.add.text(200, 150, quizJson[this.index].question, { align: "center", wordWrap: { width: 400, useAdvancedWrap: true } })
+      console.log(quizJson);
+      this.popupBG.setVisible(true);
+      this.quiztext = this.scene.add.text(200, 150, quizJson[index].question, { align: "center", wordWrap: { width: 400, useAdvancedWrap: true } })
           .setColor('#000000');
-      this.choices1 = this.scene.add.text(200, 200, quizJson[this.index].choices[0], { align: "right", wordWrap: { width: 450, useAdvancedWrap: true } })
+      this.choices1 = this.scene.add.text(200, 200, quizJson[index].choices[0], { align: "right", wordWrap: { width: 450, useAdvancedWrap: true } })
           .setColor('#000000')
           .setInteractive()
           .on('pointerover', () => this.choices1?.setColor('#fff000'))
           .on('pointerout', () => this.choices1?.setColor('#000000'))
           .on('pointerup', () => this.container?.destroy());
-      this.choices2 = this.scene.add.text(400, 200, quizJson[this.index].choices[1], { align: "right", wordWrap: { width: 400, useAdvancedWrap: true } })
-          .setColor('#000000')
+      this.choices2 = this.scene.add.text(400, 200, quizJson[index].choices[1], { align: "right", wordWrap: { width: 400, useAdvancedWrap: true } })
+           .setColor('#000000')
            .setInteractive()
            .on('pointerover', () => this.choices2?.setColor('#fff000'))
            .on('pointerout', () => this.choices2?.setColor('#000000'))
            .on('pointerup', () => this.container?.destroy());
-      if (quizJson[this.index].choices[0] == 'True'){
+      /*if (quizJson[this.index].choices[0] == 'True'){
           this.container = this.scene.add.container(32, 70, [ this.popupBG, this.quiztext, this.choices1, this.choices2 ]);
           for (let i = 0; i < 2; i++){
             if ((quizJson[this.index].choices[i] == quizJson[this.index].expected) && (i % 2 == 0)){
@@ -66,10 +68,10 @@ export default class Questions extends Phaser.GameObjects.Container {
           this.container = this.scene.add.container(32, 70, [ this.popupBG, this.quiztext, this.choices1, this.choices2, this.choices3, this.choices4 ]);
           for (let i = 0; i < 4; i++){
               if (quizJson[this.index].choices[i] == quizJson[this.index].expected){
-                  
+                this.choices1.on('pointerup', () => this.addCoins(), this.container?.destroy);
               }
-          }
-     }
+          } 
+     } */
   }
 
   private addCoins(){
