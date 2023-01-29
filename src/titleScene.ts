@@ -4,6 +4,7 @@ export default class titleScene extends Phaser.Scene {
     startButton!: Phaser.GameObjects.Image;
     easyButton!:Phaser.GameObjects.Image;
     hardButton!:Phaser.GameObjects.Image;
+    mute!:Phaser.GameObjects.Image;
     cursorKeys!: Phaser.Types.Input.Keyboard.CursorKeys;
     spacebar!: Phaser.Input.Keyboard.Key;
     music!: Phaser.Sound.BaseSound;
@@ -14,7 +15,7 @@ export default class titleScene extends Phaser.Scene {
     declare scale: any;
     public difficulty!: Array<string>;
     nene: any;
-    mute: any;
+    
     
 
     constructor() {
@@ -29,9 +30,10 @@ export default class titleScene extends Phaser.Scene {
         this.load.image('titleStart','assets/startButton.png')
         this.load.image('easyButton','assets/easy.png')
         this.load.image('hardButton','assets/hard.png')
+        this.load.image('mute','assets/pink.png')
         this.load.image('bigNene','assets/neneTitle.png')
         this.load.audio('summerFun','assets/summerFun.mp3')
-        this.load.image('mute','assets/pink.png')
+        
 
         
       }
@@ -40,6 +42,7 @@ export default class titleScene extends Phaser.Scene {
         //load in music
         this.music = this.sound.add("summerFun", { loop: true });
         this.music.play()
+        
        
         //background
         this.add.image(400,300,'titleScreen');
@@ -93,11 +96,7 @@ export default class titleScene extends Phaser.Scene {
 
         
 
-        //Mute
-       this.mute=this.add.image(195,470,'mute')
-       this.easyButton.on("pointerup",()=>{
-        this.music.stop
-    })
+        
     
         
         
@@ -117,6 +116,19 @@ export default class titleScene extends Phaser.Scene {
             this.startButton?.setVisible(false)
             this.easyButton?.setVisible(true)
             this.hardButton?.setVisible(true)
+        })
+        //Mute
+       this.mute=this.add.image(195,300,'mute')
+       this.mute.setAlpha(.7);
+       this.mute.setInteractive();
+        this.mute.on("pointerover",() =>{
+            this.mute.setAlpha(1);
+        });
+        this.mute.on("pointerout", ()=>{
+            this.mute.setAlpha(.7);
+        });
+       this.mute.on("pointerup",()=>{
+        this.music.pause()
         })
     }
 }
