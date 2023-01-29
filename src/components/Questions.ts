@@ -44,8 +44,10 @@ export default class Questions extends Phaser.GameObjects.Container {
       if (quizJson[this.index].choices[0] == 'True'){
           this.container = this.scene.add.container(32, 70, [ this.popupBG, this.quiztext, this.choices1, this.choices2 ]);
           for (let i = 0; i < 2; i++){
-            if (quizJson[this.index].choices[i] == quizJson[this.index].expected){
-                this.
+            if ((quizJson[this.index].choices[i] == quizJson[this.index].expected) && (i % 2 == 0)){
+                this.choices1.on('pointerup', () => this.addCoins(), this.container?.destroy);
+            } else {
+                this.choices2.on('pointerup', () => this.addCoins(), this.container?.destroy);
             }
         }
       } else {
@@ -64,9 +66,14 @@ export default class Questions extends Phaser.GameObjects.Container {
           this.container = this.scene.add.container(32, 70, [ this.popupBG, this.quiztext, this.choices1, this.choices2, this.choices3, this.choices4 ]);
           for (let i = 0; i < 4; i++){
               if (quizJson[this.index].choices[i] == quizJson[this.index].expected){
-                  continue;
+                  
               }
           }
-      }
+     }
   }
+
+  private addCoins(){
+    (this.scene as GameScene).coins += 2;
+  }
+
 }
