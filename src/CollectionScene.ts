@@ -1,5 +1,8 @@
 import Phaser from 'phaser'
 import eventsCenter from './EventsCenter'
+import { ScrollablePanel } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
+
+
 
 export default class collectionScene extends Phaser.Scene {
     private backButton!: Phaser.GameObjects.Image;
@@ -9,6 +12,7 @@ export default class collectionScene extends Phaser.Scene {
     private hats: Array<string>;
     private neneImages: Phaser.GameObjects.Group;
     private neneText: Phaser.GameObjects.Group;
+    private scrollPanel?: ScrollablePanel;
 
     constructor(){
         super({key: 'collectionScene'});
@@ -23,6 +27,8 @@ export default class collectionScene extends Phaser.Scene {
         //Preloads the collection background image
         this.load.image("collectionBG", "assets/collectionBG.jpg");
         this.load.image("backButton", "assets/backButton.png");
+        this.load.scenePlugin('rexuiplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js', 'rexUI', 'rexUI');
+        
     }
 
     create(){
