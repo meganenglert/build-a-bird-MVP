@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import GameScene from "../GameScene";
-import DragAndDrop from "./DragAndDrop";
+//import DragAndDrop from "./DragAndDrop";
 
 export default class Shop extends Phaser.GameObjects.Container {
   private color: Phaser.GameObjects.Image;

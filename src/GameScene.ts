@@ -30,7 +30,7 @@ export default class GameScene extends Phaser.Scene {
 
   // Question pop ups
   // Also processes question data and displays
-  private questions?: Questions;
+  //private questions?: Questions;
 
   // Where the different objects are displayed / stacked
   //private displayArea?: DisplayArea;
