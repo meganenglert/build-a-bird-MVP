@@ -134,7 +134,7 @@ export default class collectionScene extends Phaser.Scene {
 
         //const lines = content.split('\n');
 
-        this.scrollPanel.clear()
+        this.scrollPanel.clear(true)
         let x = -10;
         let y = 150;
         console.log(this.nenesCollected);
@@ -207,7 +207,7 @@ var sizer = panel.getElement('panel');
     public updateNenes(currentNenes: Record<string,string>) {
         console.log(currentNenes);
         this.nenesCollected = currentNenes;
-        this.loadInNenes();
+        this.updatePanel();
     }
 
     //Function that displays the names of the nenes
