@@ -16,7 +16,8 @@ export default class GameScene extends Phaser.Scene {
   //Rachel
   public coins: number;
   public totalnene: number;
-
+  mute!:Phaser.GameObjects.Image;
+  unmute!:Phaser.GameObjects.Image;
   public coinTracker: Record<string,string>;
   //Rachel End
 
@@ -62,9 +63,10 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("bg", "assets/background.png");
     this.load.image("color", "assets/Colorwheel.png");
     this.load.image("hats", "assets/hats.png");
-
+    this.load.audio('summerFun','assets/summerFun.mp3')
     this.load.image("popup", "assets/popup.png");
-
+    this.load.image('mute','assets/unmute.png')
+    this.load.image('unmute','assets/mute.png')
     this.loadAttribute("colors", this.colors);
     this.loadAttribute("hats", this.hats);
     this.load.image("reset", "assets/reset.png");
@@ -86,7 +88,8 @@ export default class GameScene extends Phaser.Scene {
     this.background = this.add.image(450, 300, "bg");
     this.background.displayHeight = 600;
     this.background.displayWidth = 900;
-
+    this.music = this.sound.add("summerFun", { loop: true });
+    this.music.play()
     // CREATES THE SHOP OBJECT & initializes values & SHOWS
 
     // CREATES THE SHOP OBJECT & initializes values & SHOWS
@@ -139,6 +142,36 @@ export default class GameScene extends Phaser.Scene {
       this.saveButton.setAlpha(0.9);
     });
     this.saveButton.on("pointerdown", () => this.saveMyObject(editor.text));
+    this.unmute=this.add.image(750,40,'unmute')
+         this.unmute.setVisible(false)
+         this.unmute.setAlpha(.7);
+         this.unmute.setInteractive();
+         this.unmute.on("pointerover",() =>{
+             this.unmute.setAlpha(1);
+         });
+         this.unmute.on("pointerout", ()=>{
+             this.unmute.setAlpha(.7);
+         });
+         this.unmute.on("pointerup",()=>{
+             this.unmute?.setVisible(false)
+             this.mute?.setVisible(true)
+             this.music.resume()
+         })
+         this.mute=this.add.image(750,40,'mute')
+         this.mute.setAlpha(.7);
+         this.mute.setInteractive();
+          this.mute.on("pointerover",() =>{
+              this.mute.setAlpha(1);
+          });
+          this.mute.on("pointerout", ()=>{
+              this.mute.setAlpha(.7);
+          });
+         this.mute.on("pointerup",()=>{
+          this.mute?.setVisible(false)
+          this.unmute?.setVisible(true)
+          this.music.pause()
+          })
+    
   }
   saveMyObject(elem: string) {
     this.coinTracker[this.dragAndDrop?.generateDisplayString() || ""] = (elem as string);
@@ -168,9 +201,11 @@ export default class GameScene extends Phaser.Scene {
     this.scene.stop("GameScene").stop("collectionScene").launch("End")
 
   }
+  
 
   update() {
-    if (this.totalnene == 25) {
+    if (this.totalnene == 3) {
+      this.music.stop()
       this.totalnene = 1;
       this.coins = 0;
       this.coinTracker = {"":"vanilla nene"};

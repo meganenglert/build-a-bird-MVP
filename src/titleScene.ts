@@ -73,6 +73,7 @@ export default class titleScene extends Phaser.Scene {
         this.easyButton.on("pointerup",()=>{
             this.titleText?.setVisible(false)
             this.easyButton?.setVisible(false)
+            this.music.stop()
             this.scene.stop('titleScene').launch('GameScene');
         })
         
@@ -92,6 +93,7 @@ export default class titleScene extends Phaser.Scene {
              this.hardButton?.setVisible(false)
              this.difficulty.push("true");
              console.log(this.difficulty[0])
+             this.music.stop()
              this.scene.stop('titleScene').launch('GameScene',this.difficulty);
          })
         

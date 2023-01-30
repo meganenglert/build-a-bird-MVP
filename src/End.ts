@@ -11,7 +11,8 @@ export default class End extends Phaser.Scene {
     preload() {
         //Preloads the collection background image
         this.load.image("collectionBG", "assets/collectionBG.jpg");
-        this.load.image("Pink", "assets/pink.png");
+        this.load.image("Pink", "assets/arrow.png");
+        this.load.audio("Uwin", "assets/mixkit-game-level-completed-2059.wav")
     }
 
     create(){
@@ -21,8 +22,9 @@ export default class End extends Phaser.Scene {
         //Displays the back button
         //When the back button is clicked, it returns to the Game Scene 
         this.collectionBG=this.add.image(450, 300, "collectionBG");  
-        this.backButton=this.add.image(300, 530, "Pink").setInteractive();
-        
+        this.backButton=this.add.image(450, 500, "Pink").setInteractive();
+        this.music2 = this.sound.add('Uwin')
+        this.music2.play()
         this.backButton.on("pointerover",() =>{
             this.backButton.setAlpha(1);
         });
@@ -30,7 +32,8 @@ export default class End extends Phaser.Scene {
             this.backButton.setAlpha(0.7);
         });
         this.backButton.on('pointerdown', ()=>this.goToTitleScene());
-       this.add.text(300,300,"YOU WIN!",{fontSize: '64px',"color":"#0000000"})
+       this.add.text(225,200,"YOU WIN!",{fontSize: '100px',"color":"#0000000"})
+       this.add.text(150,300,"You Found all of the Nenes!",{fontSize: '40px',"color":"#0000000"})
     }
 
     //Function that handles changing the scene to the Game Scene
