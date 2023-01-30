@@ -134,7 +134,7 @@ export default class collectionScene extends Phaser.Scene {
 
         //const lines = content.split('\n');
 
-        this.scrollPanel.clear(true)
+        this.scrollPanel = this.scrollPanel.clear(true)
         let x = -10;
         let y = 150;
         console.log(this.nenesCollected);
